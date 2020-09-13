@@ -31,19 +31,19 @@ Configuration () {
 	fi
 
 	# Verify Lidarr Connectivity
-	lidarrtest=$(curl -s "$LidarrUrl/api/v1/system/status?apikey=${LidarrAPIkey}" | jq -r ".version")
+	lidarrtest=$(curl -s "$LIDARRURL/api/v1/system/status?apikey=${LIDARRAPIKEY}" | jq -r ".version")
 	if [ ! -z "$lidarrtest" ]; then
 		if [ "$lidarrtest" != "null" ]; then
 			echo "Lidarr Connection Valid, version: $lidarrtest"
 		else
 			echo "ERROR: Cannot communicate with Lidarr, most likely a...."
-			echo "ERROR: Invalid API Key: $LidarrAPIkey"
+			echo "ERROR: Invalid API Key: $LIDARRAPIKEY"
 			error=1
 		fi
 	else
 		echo "ERROR: Cannot communicate with Lidarr, no response"
-		echo "ERROR: URL: $LidarrUrl"
-		echo "ERROR: API Key: $LidarrAPIkey"
+		echo "ERROR: URL: $LIDARRURL"
+		echo "ERROR: API Key: $LIDARRAPIKEY"
 		error=1
 	fi
 	
@@ -104,12 +104,12 @@ Configuration () {
 
 	
 
-	if [ ! -z "$Concurrency" ]; then
-		echo "Audio: Concurrency: $Concurrency"
-		sed -i "s%queueConcurrency\"] = 1%queueConcurrency\"] = $Concurrency%g" "/config/scripts/dlclient.py"
+	if [ ! -z "$CONCURRENCY" ]; then
+		echo "Audio: Concurrency: $CONCURRENCY"
+		sed -i "s%queueConcurrency\"] = 1%queueConcurrency\"] = $CONCURRENCY%g" "/config/scripts/dlclient.py"
 	else
 		echo "WARNING: Concurrency setting invalid, defaulting to: 1"
-		Concurrency="1"
+		CONCURRENCY="1"
 	fi
 	
 	if [ ! -z "$FORMAT" ]; then
@@ -171,7 +171,7 @@ Configuration () {
 	
 	if [ "$DOWNLOADMODE" == "artist" ]; then
 		echo "Audio: Dowload Mode: $DOWNLOADMODE (Archives all albums by artist)"
-		wantit=$(curl -s --header "X-Api-Key:"${LidarrAPIkey} --request GET  "$LidarrUrl/api/v1/rootFolder")
+		wantit=$(curl -s --header "X-Api-Key:"${LIDARRAPIKEY} --request GET  "$LIDARRURL/api/v1/rootFolder")
 		path=($(echo "${wantit}" | jq -r ".[].path"))
 		for id in ${!path[@]}; do
 			pathprocess=$(( $id + 1 ))
@@ -207,15 +207,15 @@ Configuration () {
 			echo "Audio : Plex Library Notification: DISABLED"
 		fi
 	fi
-	if [ ! -z "$requirequality" ]; then
-		if [ "$requirequality" == "true" ]; then
+	if [ ! -z "$REQUIREQUALITY" ]; then
+		if [ "$REQUIREQUALITY" == "true" ]; then
 			echo "Audio: Require Quality: ENABLED"
 		else
 			echo "Audio: Require Quality: DISABLED"
 		fi
 	else
-		echo "WARNING: requirequality setting invalid, defaulting to: false"
-		requirequality="false"
+		echo "WARNING: REQUIREQUALITY setting invalid, defaulting to: false"
+		REQUIREQUALITY="false"
 	fi
 	
 	if [ "$DOWNLOADMODE" == "wanted" ]; then
@@ -232,52 +232,52 @@ Configuration () {
 			LIST="missing"
 		fi
 
-		if [ "$SearchType" == "both" ]; then
+		if [ "$SEARCHTYPE" == "both" ]; then
 			echo "Audio: Search Type: Artist Searching & Backup Fuzzy Searching"
-		elif [ "$SearchType" == "artist" ]; then
+		elif [ "$SEARCHTYPE" == "artist" ]; then
 			echo "Audio: Search Type: Artist Searching Only (Exception: Fuzzy search only for Various Artists)"
-		elif [ "$SearchType" == "fuzzy" ]; then
+		elif [ "$SEARCHTYPE" == "fuzzy" ]; then
 			echo "Audio: Search Type: Fuzzy Searching Only"
 		else
 			echo "Audio: Search Type: Artist Searching & Backup Fuzzy Searching"
-			SearchType="both"
+			SEARCHTYPE="both"
 		fi
 	
-		if [ ! -z "$MatchDistance" ]; then
-			echo "Audio: Match Distance: $MatchDistance"
+		if [ ! -z "$MATCHDISTANCE" ]; then
+			echo "Audio: Match Distance: $MATCHDISTANCE"
 		else
-			echo "WARNING: MatchDistance not set, using default..."
-			MatchDistance="10"
-			echo "Audio: Match Distance: $MatchDistance"
+			echo "WARNING: MATCHDISTANCE not set, using default..."
+			MATCHDISTANCE="10"
+			echo "Audio: Match Distance: $MATCHDISTANCE"
 		fi
 		
 	fi
 
-	if [ ! -z "$replaygain" ]; then
-		if [ "$replaygain" == "true" ]; then
+	if [ ! -z "$REPLAYGAIN" ]; then
+		if [ "$REPLAYGAIN" == "true" ]; then
 			echo "Audio: Replaygain Tagging: ENABLED"
 		else
 			echo "Audio: Replaygain Tagging: DISABLED"
 		fi
 	else
 		echo "WARNING: replaygain setting invalid, defaulting to: true"
-		replaygain="true"
+		REPLAYGAIN="true"
 	fi
 
-	if [ ! -z "$FilePermissions" ]; then
-		echo "Audio: File Permissions: $FilePermissions"
+	if [ ! -z "$FILEPERMISSIONS" ]; then
+		echo "Audio: File Permissions: $FILEPERMISSIONS"
 	else
-		echo "WARNING: FilePermissions not set, using default..."
-		FilePermissions="666"
-		echo "Audio: File Permissions: $FilePermissions"
+		echo "WARNING: FILEPERMISSIONS not set, using default..."
+		FILEPERMISSIONS="666"
+		echo "Audio: File Permissions: $FILEPERMISSIONS"
 	fi
 
-	if [ ! -z "$FolderPermissions" ]; then
-		echo "Audio: Folder Permissions: $FolderPermissions"
+	if [ ! -z "$FOLDERPERMISSIONS" ]; then
+		echo "Audio: Folder Permissions: $FOLDERPERMISSIONS"
 	else
-		echo "WARNING: FolderPermissions not set, using default..."
-		FolderPermissions="766"
-		echo "Audio: Folder Permissions: $FolderPermissions"
+		echo "WARNING: FOLDERPERMISSIONS not set, using default..."
+		FOLDERPERMISSIONS="766"
+		echo "Audio: Folder Permissions: $FOLDERPERMISSIONS"
 	fi
 
 	if [ $error = 1 ]; then
@@ -327,7 +327,7 @@ Conversion () {
 
 DownloadQualityCheck () {
 
-	if [ "$requirequality" == "true" ]; then
+	if [ "$REQUIREQUALITY" == "true" ]; then
 		echo "$logheader :: DOWNLOAD :: Checking for unwanted files"
 		if [ "$quality" == "FLAC" ]; then
 			if find "$DOWNLOADS"/amd/dlclient -iname "*.mp3" | read; then
@@ -347,7 +347,7 @@ DownloadQualityCheck () {
 }
 
 AddReplaygainTags () {
-	if [ "$replaygain" == "true" ]; then
+	if [ "$REPLAYGAIN" == "true" ]; then
 		echo "$logheader :: DOWNLOAD :: Adding Replaygain Tags using r128gain"
 		r128gain -r -a "$DOWNLOADS/amd/dlclient"
 	fi
@@ -368,14 +368,14 @@ LidarrList () {
 
 	if [[ "$LIST" == "missing" || "$LIST" == "both" ]]; then
 		echo "Downloading missing list..."
-		curl --header "X-Api-Key:"${LidarrAPIkey} --request GET  "$LidarrUrl/api/v1/wanted/missing/?page=1&pagesize=${amount}&includeArtist=true&monitored=true&sortDir=desc&sortKey=releaseDate" -o "/config/scripts/temp-lidarr-missing.json"
+		curl --header "X-Api-Key:"${LIDARRAPIKEY} --request GET  "$LIDARRURL/api/v1/wanted/missing/?page=1&pagesize=${amount}&includeArtist=true&monitored=true&sortDir=desc&sortKey=releaseDate" -o "/config/scripts/temp-lidarr-missing.json"
 		missingtotal=$(cat "/config/scripts/temp-lidarr-missing.json" | jq -r '.records | .[] | .id' | wc -l)
 		echo "FINDING MISSING ALBUMS: ${missingtotal} Found"
 	fi
 
 	if [[ "$LIST" == "cutoff" || "$LIST" == "both" ]]; then
 		echo "Downloading cutoff list..."
-		curl --header "X-Api-Key:"${LidarrAPIkey} --request GET  "$LidarrUrl/api/v1/wanted/cutoff/?page=1&pagesize=${amount}&includeArtist=true&monitored=true&sortDir=desc&sortKey=releaseDate" -o "/config/scripts/temp-lidarr-cutoff.json"
+		curl --header "X-Api-Key:"${LIDARRAPIKEY} --request GET  "$LIDARRURL/api/v1/wanted/cutoff/?page=1&pagesize=${amount}&includeArtist=true&monitored=true&sortDir=desc&sortKey=releaseDate" -o "/config/scripts/temp-lidarr-cutoff.json"
 		cuttofftotal=$(cat "/config/scripts/temp-lidarr-cutoff.json" | jq -r '.records | .[] | .id' | wc -l)
 		echo "FINDING CUTOFF ALBUMS: ${cuttofftotal} Found"
 	fi
@@ -397,7 +397,7 @@ LidarrList () {
 
 ArtistMode () {
 	echo "############################################ DOWNLOAD AUDIO (ARTIST MODE)"
-	wantit=$(curl -s --header "X-Api-Key:"${LidarrAPIkey} --request GET  "$LidarrUrl/api/v1/Artist/")
+	wantit=$(curl -s --header "X-Api-Key:"${LIDARRAPIKEY} --request GET  "$LIDARRURL/api/v1/Artist/")
 	wantedtotal=$(echo "${wantit}"|jq -r '.[].sortName' | wc -l)
 	MBArtistID=($(echo "${wantit}" | jq -r ".[].foreignArtistId"))
 	for id in ${!MBArtistID[@]}; do
@@ -502,8 +502,8 @@ ArtistMode () {
 						DownloadQualityCheck
 					fi
 					if find "$DOWNLOADS"/amd/dlclient -iregex ".*/.*\.\(flac\|mp3\)" | read; then
-						find "$DOWNLOADS"/amd/dlclient -type d -exec chmod $FolderPermissions {} \;
-						find "$DOWNLOADS"/amd/dlclient -type f -exec chmod $FilePermissions {} \;
+						find "$DOWNLOADS"/amd/dlclient -type d -exec chmod $FOLDERPERMISSIONS {} \;
+						find "$DOWNLOADS"/amd/dlclient -type f -exec chmod $FILEPERMISSIONS {} \;
 						chown -R abc:abc "$DOWNLOADS"/amd/dlclient
 					else
 						echo "$logheader :: DOWNLOAD :: ERROR :: No files found"
@@ -526,10 +526,10 @@ ArtistMode () {
 				
 				if [ ! -d "$LidArtistPath/$albumfolder" ]; then
 					mkdir -p "$LidArtistPath/$albumfolder"
-					chmod $FolderPermissions "$LidArtistPath/$albumfolder"
+					chmod $FOLDERPERMISSIONS "$LidArtistPath/$albumfolder"
 				fi
 				mv "$DOWNLOADS"/amd/dlclient/* "$LidArtistPath/$albumfolder"/
-				chmod $FilePermissions "$LidArtistPath/$albumfolder"/*
+				chmod $FILEPERMISSIONS "$LidArtistPath/$albumfolder"/*
 				chown -R abc:abc "$LidArtistPath/$albumfolder"
 				PlexNotification
 				logheader="$logheaderstart"
@@ -549,7 +549,7 @@ WantedMode () {
 		lidarralbumid="${missinglistalbumids[$id]}"
 		albumdeezerurl=""
 		error=0
-		lidarralbumdata=$(curl -s --header "X-Api-Key:"${LidarrAPIkey} --request GET  "$LidarrUrl/api/v1/album?albumIds=${lidarralbumid}")
+		lidarralbumdata=$(curl -s --header "X-Api-Key:"${LIDARRAPIKEY} --request GET  "$LIDARRURL/api/v1/album?albumIds=${lidarralbumid}")
 		OLDIFS="$IFS"
 		IFS=$'\n'
 		lidarralbumdrecordids=($(echo "${lidarralbumdata}" | jq -r '.[] | .releases | .[] | .title' | sort -u))
@@ -663,7 +663,7 @@ WantedMode () {
 				albumbimportfolder="$LIDARRREMOTEPATH/amd/import/$artistclean - $albumclean ($albumreleaseyear)-WEB-$lidarralbumtype-deemix"
 				albumbimportfoldername="$(basename "$albumbimportfolder")"
 			fi
-			LidarrProcessIt=$(curl -s "$LidarrUrl/api/v1/command" --header "X-Api-Key:"${LidarrAPIkey} --data "{\"name\":\"DownloadedAlbumsScan\", \"path\":\"${albumbimportfolder}\"}")
+			LidarrProcessIt=$(curl -s "$LIDARRURL/api/v1/command" --header "X-Api-Key:"${LIDARRAPIKEY} --data "{\"name\":\"DownloadedAlbumsScan\", \"path\":\"${albumbimportfolder}\"}")
 			echo "$logheader :: LIDARR IMPORT NOTIFICATION SENT! :: $albumbimportfoldername"
 			continue
 		fi
@@ -677,7 +677,7 @@ WantedMode () {
 
 		if [ -z "$albumdeezerurl" ]; then
 			
-			if [[ "$albumartistname" != "Various Artists" && "$SearchType" != "fuzzy" ]]; then
+			if [[ "$albumartistname" != "Various Artists" && "$SEARCHTYPE" != "fuzzy" ]]; then
 				if [ ! -z "${albumartistlistlinkid}" ]; then
 					for id in ${!albumartistlistlinkid[@]}; do
 						currentprocess=$(( $id + 1 ))
@@ -794,7 +794,7 @@ WantedMode () {
 									albumdeezerurl=""
 									continue
 								fi
-								echo "$logheader :: Checking $DeezerArtistAlbumListSortTotal Albums for match ($albumtitle) with Max Distance Score of $MatchDistance or less"
+								echo "$logheader :: Checking $DeezerArtistAlbumListSortTotal Albums for match ($albumtitle) with Max Distance Score of $MATCHDISTANCE or less"
 								for id in ${!DeezerArtistAlbumListAlbumID[@]}; do
 									currentprocess=$(( $id + 1 ))
 									deezeralbumid="${DeezerArtistAlbumListAlbumID[$id]}"
@@ -805,7 +805,7 @@ WantedMode () {
 									deezeralbumyear="${deezeralbumdate:0:4}"
 									explicit="$(echo "$deezeralbumdata" | jq -r ".explicit_lyrics")"
 									diff=$(levenshtein "${albumtitle,,}" "${deezeralbumtitle,,}")
-									if [ "$diff" -le "$MatchDistance" ]; then
+									if [ "$diff" -le "$MATCHDISTANCE" ]; then
 										echo "$logheader :: ${albumtitle,,} vs ${deezeralbumtitle,,} :: Distance = $diff :: $deezeralbumid :: MATCH"
 										deezersearchalbumid="$deezeralbumid"
 										break
@@ -846,7 +846,7 @@ WantedMode () {
 				fi
 			fi
 
-			if [[ "$SearchType" == "artist" && "$albumartistname" != "Various Artists" ]]; then
+			if [[ "$SEARCHTYPE" == "artist" && "$albumartistname" != "Various Artists" ]]; then
 				if [ -z "$albumdeezerurl" ]; then
 					echo "$logheader :: Skipping fuzzy search..."
 					error=1
@@ -994,12 +994,12 @@ WantedMode () {
 					fi
 
 					if [ -z "$deezersearchalbumid" ]; then
-						echo "$logheader :: Searching $albumlistalbumidcount Albums for Matches with Max Distance Score of $MatchDistance or less"
+						echo "$logheader :: Searching $albumlistalbumidcount Albums for Matches with Max Distance Score of $MATCHDISTANCE or less"
 						for id in "${!albumlistalbumid[@]}"; do
 							deezerid=${albumlistalbumid[$id]}
 							deezeralbumtitle="$(echo "$searchdata" | jq -r "select(.album.id==$deezerid) | .album.title" | head -n 1)"
 							diff=$(levenshtein "${albumtitle,,}" "${deezeralbumtitle,,}")
-							if [ "$diff" -le "$MatchDistance" ]; then
+							if [ "$diff" -le "$MATCHDISTANCE" ]; then
 								echo "$logheader :: ${albumtitle,,} vs ${deezeralbumtitle,,} :: Distance = $diff :: $deezerid :: MATCH"
 								deezersearchalbumid="$deezerid"
 							else
@@ -1087,7 +1087,7 @@ WantedMode () {
 					DownloadQualityCheck
 				fi
 				if find "$DOWNLOADS"/amd/dlclient -iregex ".*/.*\.\(flac\|mp3\)" | read; then
-					chmod $FilePermissions "$DOWNLOADS"/amd/dlclient/*
+					chmod $FILEPERMISSIONS "$DOWNLOADS"/amd/dlclient/*
 					chown -R abc:abc "$DOWNLOADS"/amd/dlclient
 					echo "$logheader :: DOWNLOAD :: success"
 					echo "$filelogheader :: $albumdeezerurl :: $albumreleasegroupmbzid :: $albumtitle :: $albumbimportfolder"  >> "/config/logs/download.log"
@@ -1118,22 +1118,22 @@ WantedMode () {
 
 		if [ ! -d "$DOWNLOADS/amd/import" ]; then
 			mkdir -p "$DOWNLOADS/amd/import"
-			chmod $FolderPermissions "$DOWNLOADS/amd/import"
+			chmod $FOLDERPERMISSIONS "$DOWNLOADS/amd/import"
 			chown -R abc:abc "$DOWNLOADS/amd/import"
 		fi
 
 		if [ ! -d "$albumbimportfolder" ]; then
 			mkdir -p "$albumbimportfolder"
 			mv "$DOWNLOADS"/amd/dlclient/* "$albumbimportfolder"/
-			chmod $FolderPermissions "$albumbimportfolder"
-			chmod $FilePermissions "$albumbimportfolder"/*
+			chmod $FOLDERPERMISSIONS "$albumbimportfolder"
+			chmod $FILEPERMISSIONS "$albumbimportfolder"/*
 			chown -R abc:abc "$albumbimportfolder"
 		fi
 		if [ "$remotepath" == "true" ]; then
 			albumbimportfolder="$LIDARRREMOTEPATH/amd/import/$artistclean - $albumclean ($albumreleaseyear)-WEB-$lidarralbumtype-deemix"
 			albumbimportfoldername="$(basename "$albumbimportfolder")"
 		fi
-		LidarrProcessIt=$(curl -s "$LidarrUrl/api/v1/command" --header "X-Api-Key:"${LidarrAPIkey} --data "{\"name\":\"DownloadedAlbumsScan\", \"path\":\"${albumbimportfolder}\"}")
+		LidarrProcessIt=$(curl -s "$LIDARRURL/api/v1/command" --header "X-Api-Key:"${LIDARRAPIKEY} --data "{\"name\":\"DownloadedAlbumsScan\", \"path\":\"${albumbimportfolder}\"}")
 		echo "$logheader :: LIDARR IMPORT NOTIFICATION SENT! :: $albumbimportfoldername"
 	done
 	echo "############################################ DOWNLOAD AUDIO COMPLETE"
@@ -1161,17 +1161,17 @@ CreateDownloadFolders () {
 
 SetFolderPermissions () {
 	if [ -d "$DOWNLOADS/amd/import" ]; then
-		chmod $FolderPermissions "$DOWNLOADS/amd/import"
+		chmod $FOLDERPERMISSIONS "$DOWNLOADS/amd/import"
 		chown -R abc:abc "$DOWNLOADS/amd/import"
 	fi
 
 	if [ -d "$DOWNLOADS/amd/dlclient" ]; then
-		chmod $FolderPermissions "$DOWNLOADS/amd/dlclient"
+		chmod $FOLDERPERMISSIONS "$DOWNLOADS/amd/dlclient"
 		chown -R abc:abc "$DOWNLOADS/amd/dlclient"
 	fi
 
 	if [ -d "$DOWNLOADS/amd" ]; then
-		chmod $FolderPermissions "$DOWNLOADS/amd"
+		chmod $FOLDERPERMISSIONS "$DOWNLOADS/amd"
 		chown -R abc:abc "$DOWNLOADS/amd"
 	fi
 }

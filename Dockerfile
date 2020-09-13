@@ -14,15 +14,15 @@ ENV AUTOSTART="true"
 ENV SCRIPTINTERVAL="1h"
 ENV DOWNLOADMODE="wanted"
 ENV LIST="both"
-ENV SearchType="both"
-ENV Concurrency=1
+ENV SEARCHTYPE="both"
+ENV CONCURRENCY=1
 ENV FORMAT="FLAC"
 ENV BITRATE=320
-ENV requirequality="false"
-ENV MatchDistance=10
-ENV replaygain="true"
-ENV FolderPermissions=766
-ENV FilePermissions=666
+ENV REQUIREQUALITY="false"
+ENV MATCHDISTANCE=10
+ENV REPLAYGAIN="true"
+ENV FOLDERPERMISSIONS=766
+ENV FILEPERMISSIONS=666
 
 RUN \
 	echo "************ install dependencies ************" && \

@@ -42,26 +42,27 @@ Container images are configured using parameters passed at runtime (such as thos
 | Parameter | Function |
 | --- | --- |
 | `-v /config` | Configuration files for Lidarr. |
-| `-v /downloads-amd` | Path to your download folder location. (<strong>DO NOT DELETE, this is a required path</strong>) :: <strong>!!!IMPORTANT!!!</strong> Map this exact volume mount to your Lidarr Container for everything to work properly!!! |
+| `-v /downloads-amd` | Path to your download folder location. (This should match what you have in DOWNLOADS) |
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
+| `-e DOWNLOADS=/downloads-amd` | for GroupID - see below for explanation |
 | `-e AUTOSTART=true` | true = Enabled :: Runs script automatically on startup |
 | `-e SCRIPTINTERVAL=1h` | #s or #m or #h or #d :: s = seconds, m = minutes, h = hours, d = days :: Amount of time between each script run, when AUTOSTART is enabled|
 | `-e DOWNLOADMODE=wanted` | wanted or artist :: wanted mode only download missing/cutoff :: artist mode downloads all albums by an artist (requires lidarr volume mapping root media folders for import) |
 | `-e LIST=both` | both or missing or cutoff :: both = missing + cutoff :: missng = lidarr missing list :: cutoff = lidarr cutoff list |
-| `-e SearchType=both` | both or artist or fuzzy :: both = artist + fuzzy searching :: artist = only artist searching :: fuzzy = only fuzzy searching (Various Artist is always fuzzy searched, regardless of setting) |
-| `-e Concurrency=1` | Number of concurrent downloads |
+| `-e SEARCHTYPE=both` | both or artist or fuzzy :: both = artist + fuzzy searching :: artist = only artist searching :: fuzzy = only fuzzy searching (Various Artist is always fuzzy searched, regardless of setting) |
+| `-e CONCURRENCY=1` | Number of concurrent downloads |
 | `-e FORMAT=FLAC` | FLAC or MP3 or OPUS or AAC or ALAC |
 | `-e BITRATE=320` | FLAC -> OPUS/AAC/MP3 will be converted using this bitrate  (MP3 320/128 is native, not converted) |
-| `-e requirequality=false` | true = enabled :: Requires all downloaded files match target file extension (mp3 or flac) when enabled |
-| `-e MatchDistance=10` | Set as an integer, the higher the number, the more lienet it is. Example: A match score of 0 is a perfect match :: For more information, this score is produced using this function: [Algorithm Implementation/Strings/Levenshtein distance](https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance) |
-| `-e replaygain=true` | true = enabled :: Scans and analyzes files to add replaygain tags to song metadata |
-| `-e FolderPermissions=766` | Based on chmod linux permissions |
-| `-e FilePermissions=666` | Based on chmod linux permissions |
+| `-e REQUIREQUALITY=false` | true = enabled :: Requires all downloaded files match target file extension (mp3 or flac) when enabled |
+| `-e MATCHDISTANCE=10` | Set as an integer, the higher the number, the more lienet it is. Example: A match score of 0 is a perfect match :: For more information, this score is produced using this function: [Algorithm Implementation/Strings/Levenshtein distance](https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance) |
+| `-e REPLAYGAIN=true` | true = enabled :: Scans and analyzes files to add replaygain tags to song metadata |
+| `-e FOLDERPERMISSIONS=766` | Based on chmod linux permissions |
+| `-e FILEPERMISSIONS=666` | Based on chmod linux permissions |
 | `-e MBRAINZMIRROR=https://musicbrainz.org` | OPTIONAL :: Only change if using a different mirror |
 | `-e MBRATELIMIT=1` | OPTIONAL: musicbrainz rate limit, musicbrainz allows only 1 connection per second, max setting is 10 :: Set to 101 to disable limit |
-| `-e LidarrUrl=http://x.x.x.x:8686` | Set domain or IP to your Lidarr instance including port. If using reverse proxy, do not use a trailing slash. Ensure you specify http/s. |
-| `-e LidarrAPIkey=LIDARRAPI` | Lidarr API key. |
+| `-e LIDARRURL=http://x.x.x.x:8686` | Set domain or IP to your Lidarr instance including port. If using reverse proxy, do not use a trailing slash. Ensure you specify http/s. |
+| `-e LIDARRAPIKEY=LIDARRAPI` | Lidarr API key. |
 | `-e ARL_TOKEN=ARLTOKEN` | User token for dl client, for instructions to obtain token: https://notabug.org/RemixDevs/DeezloaderRemix/wiki/Login+via+userToken |
 | `-e NOTIFYPLEX=false` | true = enabled :: ONLY APPLIES ARTIST MODE :: Plex must have a music library added and be configured to use the exact same mount point as Lidarr's root folder |
 | `-e PLEXLIBRARYNAME=Music` | This must exactly match the name of the Plex Library that contains the Lidarr Media Folder data |
@@ -81,23 +82,24 @@ docker create \
   -v /path/to/downloads:/downloads-amd \
   -e PUID=1000 \
   -e PGID=1000 \
+  -e DOWNLOADS=/downloads-amd \
   -e AUTOSTART=true \
   -e SCRIPTINTERVAL=1h \
   -e DOWNLOADMODE=wanted \
   -e LIST=both \
-  -e SearchType=both \
-  -e Concurrency=1 \
+  -e SEARCHTYPE=both \
+  -e CONCURRENCY=1 \
   -e FORMAT=FLAC \
   -e BITRATE=320 \
-  -e requirequality=false \
-  -e MatchDistance=10 \
-  -e replaygain=true \
-  -e FolderPermissions=766 \
-  -e FilePermissions=666 \
+  -e REQUIREQUALITY=false \
+  -e MATCHDISTANCE=10 \
+  -e REPLAYGAIN=true \
+  -e FOLDERPERMISSIONS=766 \
+  -e FILEPERMISSIONS=666 \
   -e MBRAINZMIRROR=https://musicbrainz.org \
   -e MBRATELIMIT=1 \
-  -e LidarrUrl=http://x.x.x.x:8686 \
-  -e LidarrAPIkey=LIDARRAPI \
+  -e LIDARRURL=http://x.x.x.x:8686 \
+  -e LIDARRAPIKEY=LIDARRAPI \
   -e ARL_TOKEN=ARLTOKEN	\
   -e NOTIFYPLEX=false \
   -e PLEXLIBRARYNAME=Music \
@@ -124,23 +126,24 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      - DOWNLOADS=/downloads-amd
       - AUTOSTART=true
       - SCRIPTINTERVAL=1h
       - DOWNLOADMODE=wanted
       - LIST=both
-      - SearchType=both
-      - Concurrency=1
+      - SEARCHTYPE=both
+      - CONCURRENCY=1
       - FORMAT=FLAC
       - BITRATE=320
-      - requirequality=false
-      - MatchDistance=10
-      - replaygain=true
-      - FolderPermissions=766
-      - FilePermissions=666
+      - REQUIREQUALITY=false
+      - MATCHDISTANCE=10
+      - REPLAYGAIN=true
+      - FOLDERPERMISSIONS=766
+      - FILEPERMISSIONS=666
       - MBRAINZMIRROR=https://musicbrainz.org
       - MBRATELIMIT=1
-      - LidarrUrl=http://x.x.x.x:8686
-      - LidarrAPIkey=LIDARRAPI
+      - LIDARRURL=http://x.x.x.x:8686
+      - LIDARRAPIKEY=LIDARRAPI
       - ARL_TOKEN=ARLTOKEN
       - NOTIFYPLEX=false
       - PLEXLIBRARYNAME=Music
