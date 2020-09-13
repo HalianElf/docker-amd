@@ -79,18 +79,14 @@ Configuration () {
 	fi
 
 	# verify downloads location
-	if [ -d "/downloads-amd" ]; then
-		DOWNLOADS="/downloads-amd"
+	if [ -d "$DOWNLOADS" ]; then
 		echo "Downloads Location: $DOWNLOADS/amd/dlclient"
 		echo "Import Location: $DOWNLOADS/amd/import"
+		sed -i "s%downloadLocation\"] = \"/downloads-amd%downloadLocation\"] = \"$DOWNLOADS%g" "/config/scripts/dlclient.py"
 	else
-		if [ -d "$DOWNLOADS" ]; then
-			echo "DOWNLOADS Location: $DOWNLOADS"
-		else
-			echo "ERROR: DOWNLOADS setting invalid, currently set to: $DOWNLOADS"
-			echo "ERROR: DOWNLOADS Expected Valid Setting: /your/path/to/music/downloads"
-			error=1
-		fi
+		echo "ERROR: DOWNLOADS setting invalid, currently set to: $DOWNLOADS"
+		echo "ERROR: DOWNLOADS Expected Valid Setting: /your/path/to/music/downloads"
+		error=1
 	fi
 
 	if [ ! -z "$ARL_TOKEN" ]; then
