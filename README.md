@@ -45,7 +45,7 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-v /downloads-amd` | Path to your download folder location. (This should match what you have in DOWNLOADS) |
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
-| `-e DOWNLOADS=/downloads-amd` | for GroupID - see below for explanation |
+| `-e DOWNLOADS=/downloads-amd` | Path to your download folder location |
 | `-e AUTOSTART=true` | true = Enabled :: Runs script automatically on startup |
 | `-e SCRIPTINTERVAL=1h` | #s or #m or #h or #d :: s = seconds, m = minutes, h = hours, d = days :: Amount of time between each script run, when AUTOSTART is enabled|
 | `-e DOWNLOADMODE=wanted` | wanted or artist :: wanted mode only download missing/cutoff :: artist mode downloads all albums by an artist (requires lidarr volume mapping root media folders for import) |
