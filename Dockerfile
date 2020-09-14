@@ -31,6 +31,7 @@ RUN \
 	apt-get upgrade -y && \
 	apt-get install -y --no-install-recommends \
 		gcc-arm-linux-gnueabihf \
+		libc6-dev \
 		jq \
 		mp3val \
 		flac \
