@@ -30,8 +30,7 @@ RUN \
 	apt-get update -y && \
 	apt-get upgrade -y && \
 	apt-get install -y --no-install-recommends \
-		gcc-arm-linux-gnueabihf \
-		gcc-aarch64-linux-gnu \
+		gcc \
 		libc6-dev \
 		jq \
 		mp3val \
