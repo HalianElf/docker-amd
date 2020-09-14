@@ -30,6 +30,7 @@ RUN \
 	apt-get update -y && \
 	apt-get upgrade -y && \
 	apt-get install -y --no-install-recommends \
+		gcc-arm-linux-gnueabihf \
 		jq \
 		mp3val \
 		flac \
