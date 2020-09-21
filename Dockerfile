@@ -45,7 +45,8 @@ RUN \
 		opus-tools \
 		eyed3 \
 		python3 \
-		python3-pip && \
+		python3-pip \
+		python3-dev && \
 	rm -rf \
 		/tmp/* \
 		/var/lib/apt/lists/* \
