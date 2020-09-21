@@ -59,6 +59,7 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e REPLAYGAIN=true` | true = enabled :: Scans and analyzes files to add replaygain tags to song metadata |
 | `-e FOLDERPERMISSIONS=766` | Based on chmod linux permissions |
 | `-e FILEPERMISSIONS=666` | Based on chmod linux permissions |
+| `-e FORCECONVERT=false` | true = enabled :: This will convert lossy MP3 to desired target format (exluding FLAC/ALAC, ALAC will convert to AAC) |
 | `-e MBRAINZMIRROR=https://musicbrainz.org` | OPTIONAL :: Only change if using a different mirror |
 | `-e MBRATELIMIT=1` | OPTIONAL: musicbrainz rate limit, musicbrainz allows only 1 connection per second, max setting is 10 :: Set to 101 to disable limit |
 | `-e LIDARRURL=http://x.x.x.x:8686` | Set domain or IP to your Lidarr instance including port. If using reverse proxy, do not use a trailing slash. Ensure you specify http/s. |
@@ -91,6 +92,7 @@ docker create \
   -e CONCURRENCY=1 \
   -e FORMAT=FLAC \
   -e BITRATE=320 \
+  -e FORCECONVERT=false \
   -e REQUIREQUALITY=false \
   -e MATCHDISTANCE=10 \
   -e REPLAYGAIN=true \
@@ -135,6 +137,7 @@ services:
       - CONCURRENCY=1
       - FORMAT=FLAC
       - BITRATE=320
+      - FORCECONVERT=false
       - REQUIREQUALITY=false
       - MATCHDISTANCE=10
       - REPLAYGAIN=true
