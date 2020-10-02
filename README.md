@@ -54,12 +54,12 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e CONCURRENCY=1` | Number of concurrent downloads |
 | `-e FORMAT=FLAC` | FLAC or MP3 or OPUS or AAC or ALAC |
 | `-e BITRATE=320` | FLAC -> OPUS/AAC/MP3 will be converted using this bitrate  (MP3 320/128 is native, not converted) |
+| `-e FORCECONVERT=false` | true = enabled :: This will convert lossy MP3 to desired target format (exluding FLAC/ALAC, ALAC will convert to AAC) |
 | `-e REQUIREQUALITY=false` | true = enabled :: Requires all downloaded files match target file extension (mp3 or flac) when enabled |
 | `-e MATCHDISTANCE=10` | Set as an integer, the higher the number, the more lienet it is. Example: A match score of 0 is a perfect match :: For more information, this score is produced using this function: [Algorithm Implementation/Strings/Levenshtein distance](https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Levenshtein_distance) |
 | `-e REPLAYGAIN=true` | true = enabled :: Scans and analyzes files to add replaygain tags to song metadata |
 | `-e FOLDERPERMISSIONS=766` | Based on chmod linux permissions |
 | `-e FILEPERMISSIONS=666` | Based on chmod linux permissions |
-| `-e FORCECONVERT=false` | true = enabled :: This will convert lossy MP3 to desired target format (exluding FLAC/ALAC, ALAC will convert to AAC) |
 | `-e MBRAINZMIRROR=https://musicbrainz.org` | OPTIONAL :: Only change if using a different mirror |
 | `-e MBRATELIMIT=1` | OPTIONAL: musicbrainz rate limit, musicbrainz allows only 1 connection per second, max setting is 10 :: Set to 101 to disable limit |
 | `-e LIDARRURL=http://x.x.x.x:8686` | Set domain or IP to your Lidarr instance including port. If using reverse proxy, do not use a trailing slash. Ensure you specify http/s. |

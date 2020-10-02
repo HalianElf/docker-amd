@@ -23,7 +23,7 @@ ENV SEARCHTYPE="both"
 ENV CONCURRENCY=1
 ENV FORMAT="FLAC"
 ENV BITRATE=320
-ENV FORCECONVERT=false
+ENV FORCECONVERT="false"
 ENV REQUIREQUALITY="false"
 ENV MATCHDISTANCE=10
 ENV REPLAYGAIN="true"
@@ -36,8 +36,6 @@ RUN \
 	apt-get update -y && \
 	apt-get upgrade -y && \
 	apt-get install -y --no-install-recommends \
-		gcc \
-		libc6-dev \
 		netbase \
 		jq \
 		mp3val \
@@ -45,8 +43,7 @@ RUN \
 		opus-tools \
 		eyed3 \
 		python3 \
-		python3-pip \
-		python3-dev && \
+		python3-pip && \
 	rm -rf \
 		/tmp/* \
 		/var/lib/apt/lists/* \
