@@ -894,15 +894,15 @@ ArtistAlbumList () {
 				albumid="${albumids[$id]}"
 				if [ ! -d /config/cache/artists/$artistid/albums ]; then
 					mkdir -p /config/cache/artists/$artistid/albums
-					chmod $FolderPermissions /config/cache/artists/$artistid
-					chmod $FolderPermissions /config/cache/artists/$artistid/albums
+					chmod $FOLDERPERMISSIONS /config/cache/artists/$artistid
+					chmod $FOLDERPERMISSIONS /config/cache/artists/$artistid/albums
 					chown -R abc:abc /config/cache/artists/$artistid
 				fi
 				if [ ! -f /config/cache/artists/$artistid/albums/${albumid}.json ]; then
 					if curl -sL --fail "https://api.deezer.com/album/${albumid}" -o "/config/temp/${albumid}.json"; then
 						log "$logheader :: $currentprocess of $albumcount :: Downloading Album info..."
 						mv /config/temp/${albumid}.json /config/cache/artists/$artistid/albums/${albumid}.json
-						chmod $FilePermissions /config/cache/artists/$artistid/albums/${albumid}.json
+						chmod $FILEPERMISSIONS /config/cache/artists/$artistid/albums/${albumid}.json
 					else
 						log "$logheader :: $currentprocess of $albumcount :: Error getting album information"
 					fi
@@ -911,14 +911,14 @@ ArtistAlbumList () {
 				fi
 			done
 			touch /config/cache/artists/$artistid/checked
-			chmod $FilePermissions /config/cache/artists/$artistid/checked
+			chmod $FILEPERMISSIONS /config/cache/artists/$artistid/checked
 			chown -R abc:abc /config/cache/artists/$artistid
 			if [ -d "/config/temp" ]; then
 				rm -rf "/config/temp"
 			fi
 		else
 			touch /config/cache/artists/$artistid/checked
-			chmod $FilePermissions /config/cache/artists/$artistid/checked
+			chmod $FILEPERMISSIONS /config/cache/artists/$artistid/checked
 			chown -R abc:abc /config/cache/artists/$artistid
 		fi
 	fi
